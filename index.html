@@ -41,12 +41,14 @@
    <button>Send</button>
 </table>
   <script>
-    let contacts = [
-      {ID:1,Name:'david',Email:'f@f',Phone:'055'}
-    ]
-    localStorage.setItem('contacts',JSON.stringify(contacts));
-    let arr = JSON.parse(localStorage.getItem('contacts'));
-    console.log(arr[0].Name);
+    let contacts = JSON.parse(localStorage.getItem("contacts"));
+    if (contacts == null){
+      localStorage.setItem("contacts", JSON.stringify([]));
+    }
+    if (contacts.length == 0){
+      localStorage.setItem('nextID', JSON.stringify(1));
+    }
+
 
     function createTable(arr){
       let txt = "";
@@ -63,10 +65,18 @@
     }
 
     function AddStuff(){
-      let ID = nextID;
+      let ID = JSON.parse(localStorage.getItem('nextID'));
       let Name = document.getElementById("Name").value;
       let Email = document.getElementById("Email").value;
       let Phone = document.getElementById("Phone").value;
+      let obj = {ID,Name,Email,Phone};
+      contacts.push(obj);
+      localStorage.setItem('contacts',JSON.stringify(contacts));
+      createTable(contacts);
+      document.getElementById('Name').value = "";
+      document.getElementById('Email').value = "";
+      document.getElementById('Phone').value = "";
+      localStorage.setItem('nextID',JSON.stringify(ID+1));
     }
     createTable(contacts);
   </script>
