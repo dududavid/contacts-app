@@ -38,7 +38,7 @@
    <label for="Name">Name: </label><input type="text" id="Name"><br>
    <label for="Email">Email: </label><input type="text" id="Email"><br>
    <label for="Phone">Phone: </label><input type="text" id="Phone"><br>
-   <button>Send</button>
+   <button onclick="AddStuff()">Send</button>
 </table>
   <script>
     let contacts = JSON.parse(localStorage.getItem("contacts"));
@@ -54,7 +54,8 @@
       let txt = "";
       for (obj of arr){
         txt += "<tr>";
-        txt += `<td><button>Delete</button></td>`;
+        txt += `<td><button onclick="DeleteStuff(${obj.ID})">Delete</button></td>`;
+        console.log(obj.ID)
         for (x in obj){
           txt += `<td>${obj[x]}</td>`;
         }
@@ -77,6 +78,14 @@
       document.getElementById('Email').value = "";
       document.getElementById('Phone').value = "";
       localStorage.setItem('nextID',JSON.stringify(ID+1));
+    }
+
+    function DeleteStuff(id){
+      contacts = JSON.parse(localStorage.getItem("contacts"));
+      console.log(id)
+      contacts = contacts.filter(o=>o.id != id);
+      localStorage.setItem('contacts',JSON.stringify(contacts));
+      createTable(contacts);
     }
     createTable(contacts);
   </script>
