@@ -1,0 +1,75 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link rel="stylesheet" href="css/style.css">
+  <meta name="description" content="">
+
+  <meta property="og:title" content="">
+  <meta property="og:type" content="">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+  <meta property="og:image:alt" content="">
+
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.png">
+
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#fafafa">
+</head>
+
+<body>
+ <table border="1">
+  <thead>
+   <tr>
+    <th>Delete</th>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Phone</th>
+    <th>Edit</th>
+   </tr>
+  </thead>
+  <tbody id="table"></tbody>
+   <label for="Name">Name: </label><input type="text" id="Name"><br>
+   <label for="Email">Email: </label><input type="text" id="Email"><br>
+   <label for="Phone">Phone: </label><input type="text" id="Phone"><br>
+   <button>Send</button>
+</table>
+  <script>
+    let contacts = [
+      {ID:1,Name:'david',Email:'f@f',Phone:'055'}
+    ]
+    localStorage.setItem('contacts',JSON.stringify(contacts));
+    let arr = JSON.parse(localStorage.getItem('contacts'));
+    console.log(arr[0].Name);
+
+    function createTable(arr){
+      let txt = "";
+      for (obj of arr){
+        txt += "<tr>";
+        txt += `<td><button>Delete</button></td>`;
+        for (x in obj){
+          txt += `<td>${obj[x]}</td>`;
+        }
+        txt += `<td><button>Edit</button></td>`;
+        txt += "</tr>";
+      }
+      document.getElementById("table").innerHTML = txt;
+    }
+
+    function AddStuff(){
+      let ID = nextID;
+      let Name = document.getElementById("Name").value;
+      let Email = document.getElementById("Email").value;
+      let Phone = document.getElementById("Phone").value;
+    }
+    createTable(contacts);
+  </script>
+</body>
+
+</html>
