@@ -4,25 +4,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
-  <link rel="stylesheet" href="css/style.css">
-  <meta name="description" content="">
-
-  <meta property="og:title" content="">
-  <meta property="og:type" content="">
-  <meta property="og:url" content="">
-  <meta property="og:image" content="">
-  <meta property="og:image:alt" content="">
-
-  <link rel="icon" href="/favicon.ico" sizes="any">
-  <link rel="icon" href="/icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="icon.png">
-
-  <link rel="manifest" href="site.webmanifest">
-  <meta name="theme-color" content="#fafafa">
+  <title>contact</title>
 </head>
 
 <body>
+
+<input type="hidden" id="id">
+<label for="name">Name: </label><input type="text" id="name"><br>
+<label for="email">Email: </label><input type="text" id="email"><br>
+<label for="phone">Phone: </label><input type="text" id="phone"><br>
+<button onclick="CreateOrEdit()">Send</button><br>
+<input type = "text" id = "search" oninput="search()" placeholder="search..."><br>
+
  <table border="1">
   <thead>
    <tr>
@@ -35,13 +28,11 @@
    </tr>
   </thead>
   <tbody id="table"></tbody>
-   <label for="Name">Name: </label><input type="text" id="Name"><br>
-   <label for="Email">Email: </label><input type="text" id="Email"><br>
-   <label for="Phone">Phone: </label><input type="text" id="Phone"><br>
-   <button onclick="AddStuff()">Send</button>
-</table>
+ </table>
+
   <script>
     let contacts = JSON.parse(localStorage.getItem("contacts"));
+    let nextID;
     if (contacts == null){
       localStorage.setItem("contacts", JSON.stringify([]));
     }
@@ -54,39 +45,88 @@
       let txt = "";
       for (obj of arr){
         txt += "<tr>";
-        txt += `<td><button onclick="DeleteStuff(${obj.ID})">Delete</button></td>`;
-        console.log(obj.ID)
+        txt += `<td><button onclick="DeleteStuff(${obj.id})">Delete</button></td>`;
         for (x in obj){
           txt += `<td>${obj[x]}</td>`;
         }
-        txt += `<td><button>Edit</button></td>`;
+        txt += `<td><button onclick="UpdateStuff(${obj.id})">Edit</button></td>`;
         txt += "</tr>";
       }
       document.getElementById("table").innerHTML = txt;
     }
 
     function AddStuff(){
-      let ID = JSON.parse(localStorage.getItem('nextID'));
-      let Name = document.getElementById("Name").value;
-      let Email = document.getElementById("Email").value;
-      let Phone = document.getElementById("Phone").value;
-      let obj = {ID,Name,Email,Phone};
+      let id = JSON.parse(localStorage.getItem('nextID'));
+      let name = document.getElementById("name").value;
+      let email = document.getElementById("email").value;
+      let phone = document.getElementById("phone").value;
+      let obj = {
+        id: id,
+        name: name,
+        email: email,
+        phone: phone
+      };
       contacts.push(obj);
       localStorage.setItem('contacts',JSON.stringify(contacts));
       createTable(contacts);
-      document.getElementById('Name').value = "";
-      document.getElementById('Email').value = "";
-      document.getElementById('Phone').value = "";
-      localStorage.setItem('nextID',JSON.stringify(ID+1));
+      document.getElementById('name').value = "";
+      document.getElementById('email').value = "";
+      document.getElementById('phone').value = "";
+      localStorage.setItem('nextID',JSON.stringify(id+1));
     }
 
     function DeleteStuff(id){
       contacts = JSON.parse(localStorage.getItem("contacts"));
-      console.log(id)
-      contacts = contacts.filter(o=>o.id != id);
+      contacts = contacts.filter(o => o.id !== id);
       localStorage.setItem('contacts',JSON.stringify(contacts));
       createTable(contacts);
     }
+    function UpdateStuff(id){
+      contacts = JSON.parse(localStorage.getItem("contacts"));
+      let obj = contacts.find(o => o.id === id);
+      document.getElementById("id").value = obj.id;
+      document.getElementById("name").value = obj.name;
+      document.getElementById("email").value = obj.email;
+      document.getElementById("phone").value = obj.phone;
+    }
+
+    function EditStuff(){
+      let id = document.getElementById("id").value;
+      let name = document.getElementById("name").value;
+      let email = document.getElementById("email").value;
+      let phone = document.getElementById("phone").value;
+      let obj = contacts.find(o => o.id == id);
+      obj.name = name;
+      obj.email = email;
+      obj.phone = phone;
+      localStorage.setItem('contacts',JSON.stringify(contacts));
+      createTable(contacts);
+      document.getElementById('id').value = "";
+      document.getElementById('name').value = "";
+      document.getElementById('email').value = "";
+      document.getElementById('phone').value = "";
+    }
+
+    function CreateOrEdit(){
+      let id = document.getElementById("id").value;
+      if (id)
+      {
+        EditStuff();
+      }else {
+        AddStuff();
+      }
+    }
+
+    function search(){
+      let find = document.getElementById("search").value;
+      let filterd = contacts.filter(contacts => {
+        return contacts.name.toLowerCase().includes(find) ||
+          contacts.email.toLowerCase().includes(find) ||
+          contacts.phone.toLowerCase().includes(find);
+      })
+      createTable(filterd);
+    }
+
     createTable(contacts);
   </script>
 </body>
